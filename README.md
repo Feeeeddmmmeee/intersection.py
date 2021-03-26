@@ -10,11 +10,13 @@ A not so easy to use API wrapper for IC's API with a few features.
 
 ## Installing
 
-**Python is required**. Currently there's no "official" way to download the library so you can just download the newest version from github.
-To do that you can use the following command:
+**Python is required**.
+
+using github:
 ```sh
 $ git clone https://github/Feeeeddmmmeee/intersection.py
 ```
+[pypi site](https://pypi.org/project/intersection.py/0.1.0a0/)
 
 The requests library is also required.
 
