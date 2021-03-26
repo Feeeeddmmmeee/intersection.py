@@ -23,10 +23,10 @@ The requests library is also required.
 ## User class
 ```py
 # Importing the library
-from intersection import user
+import intersection
 
 # Creating a variable "example_user" that will store the User object created with the get_user() function
-example_user = user.get_user(2452411)
+example_user = intersection.user.get_user(2452411)
 
 # Printing the user's name
 print(example_user.name)
@@ -35,10 +35,10 @@ print(example_user.name)
 ## Map class
 ```py
 # Importing the library
-from intersection import map
+import intersection
 
 # Creating a variable called "example_maps" with the get_maps() function. 
-example_maps = map.get_maps(2452411, 1, 0) 
+example_maps = intersection.map.get_maps(2452411, 1, 0) 
 
 # Printing the author's name
 print(example_maps[0].authorName)
