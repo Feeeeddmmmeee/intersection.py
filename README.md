@@ -1,17 +1,14 @@
 # intersection.py
----
 
 A not so easy to use API wrapper for IC's API with a few features.
 
 ## Key Features
----
 
 - User and Map classes with all the features an IC maps or users have
 - Several functions related to these classes
 - It's not really optimized but should work just fine
 
 ## Installing
----
 
 **Python is required**
 Currently there's no "official" way to download the library so you can just download the newest version from github.
@@ -23,7 +20,6 @@ $ git clone https://github/Feeeeddmmmeee/intersection.py
 The requests library is also required.
 
 # Code Examples
----
 
 ## User class
 ```py
