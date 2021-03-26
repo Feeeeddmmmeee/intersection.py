@@ -4,7 +4,7 @@ A not so easy to use API wrapper for IC's API with a few features.
 
 ## Key Features
 
-- User and Map classes with all the features an IC maps or users have
+- User and Map classes with all the features that IC maps or users have
 - Several functions related to these classes
 - It's not really optimized but should work just fine
 
