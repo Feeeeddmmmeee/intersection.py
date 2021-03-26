@@ -10,8 +10,7 @@ A not so easy to use API wrapper for IC's API with a few features.
 
 ## Installing
 
-**Python is required**
-Currently there's no "official" way to download the library so you can just download the newest version from github.
+**Python is required**. Currently there's no "official" way to download the library so you can just download the newest version from github.
 To do that you can use the following command:
 ```sh
 $ git clone https://github/Feeeeddmmmeee/intersection.py
@@ -33,12 +32,12 @@ example_user = user.get_user(2452411)
 print(example_user.name)
 ```
 
-# Map class
+## Map class
 ```py
 # Importing the library
 from intersection import map
 
-#Creating a variable called "example_maps" with the get_maps() function. 
+# Creating a variable called "example_maps" with the get_maps() function. 
 example_maps = map.get_maps(2452411, 1, 0) 
 
 # Printing the author's name
