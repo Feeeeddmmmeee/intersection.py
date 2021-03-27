@@ -1,4 +1,4 @@
-#A class storing all the urls that are used
+# A class storing all the urls that are used
 import pip._vendor.requests as requests
 import json
 

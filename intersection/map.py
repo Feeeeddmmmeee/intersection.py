@@ -1,5 +1,5 @@
-from intersection.url import url
-import intersection.user
+import intersection.url
+from intersection import user
 
 class Map:
     """A class representing an IC map
@@ -85,7 +85,7 @@ def get_maps(user_id, resultsPerPage, page):
 
     maps = []
 
-    api = url.map_user(user_id, resultsPerPage, page)
+    api = intersection.url.url.map_user(user_id, resultsPerPage, page)
 
     for i in range(len(api)):
 
@@ -140,7 +140,7 @@ def get_top_maps(mode, time, trendsystem):
 
     maps = []
 
-    api = url.map_top(mode, time, trendsystem)
+    api = intersection.url.url.map_top(mode, time, trendsystem)
 
     for i in range(len(api)):
 

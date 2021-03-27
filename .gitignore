@@ -1,5 +1,8 @@
 # My files
 test.py
+*.txt
+*.in
+setup.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

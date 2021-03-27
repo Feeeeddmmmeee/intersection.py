@@ -1,5 +1,5 @@
-from intersection.url import url
-import intersection.map
+import intersection.url
+from intersection import map
 
 class User:
     """A class representing an IC user
@@ -54,7 +54,7 @@ class User:
 
         maps = []
 
-        api = url.map_user(self.objectId, resultsPerPage, page)
+        api = intersection.url.url.map_user(self.objectId, resultsPerPage, page)
 
         for i in range(len(api)):
 
@@ -104,7 +104,7 @@ def get_user(id):
     Feeeeddmmmeee
     """
 
-    api = url.user_info(id)
+    api = intersection.url.url.user_info(id)
 
     user = User(
         int(api['objectId']),
@@ -141,17 +141,19 @@ def search_for_users(name):
 
     user = []
 
-    api = url.user_search(name)
+    api = intersection.url.url.user_search(name)
     
     for i in range(len(api)):
 
+        api2 = intersection.url.url.user_info(api[i]['objectId'])
+
         temp = User(
             int(api[i]['objectId']), 
-            int(url.user_info(api[i]['objectId'])['gameVersion']),
-            int(url.user_info(api[i]['objectId'])['lastLogin']),
-            int(url.user_info(api[i]['objectId'])['maps']),
-            url.user_info(api[i]['objectId'])['name'],
-            int(url.user_info(api[i]['objectId'])['followers'])
+            int(api2['gameVersion']),
+            int(api2['lastLogin']),
+            int(api2['maps']),
+            api2['name'],
+            int(api2['followers'])
         )
 
         user.append(temp)
