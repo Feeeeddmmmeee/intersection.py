@@ -11,17 +11,11 @@ A not so easy to use API wrapper for IC's API with a few features.
 ## Installing
 
 **Python is required**. You can either download the version from github or user pip
-
-github:
 ```sh
 $ git clone https://github/Feeeeddmmmeee/intersection.py
 ```
-pip (replace "version" with the version you want to download):
-```sh
-pip install intersection.py==version
-```
 
-The requests and json libraries are also required.
+The requests library is also required.
 
 # Code Examples
 
