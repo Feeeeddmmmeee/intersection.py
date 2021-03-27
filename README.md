@@ -16,6 +16,7 @@ using github:
 ```sh
 $ git clone https://github/Feeeeddmmmeee/intersection.py
 ```
+[pypi site](https://pypi.org/project/intersection.py/0.1.0a0/)
 
 The requests library is also required.
 
