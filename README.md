@@ -10,7 +10,9 @@ A not so easy to use API wrapper for IC's API with a few features.
 
 ## Installing
 
-**Python is required**. You can either download the version from github or user pip
+**Python is required**.
+
+using github:
 ```sh
 $ git clone https://github/Feeeeddmmmeee/intersection.py
 ```
