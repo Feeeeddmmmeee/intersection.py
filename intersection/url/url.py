@@ -1,6 +1,7 @@
 # A class storing all the urls that are used
 import pip._vendor.requests as requests
 import json
+import intersection.errors
 
 class URLs:
     """This class contains all the urls that are used to make requests to the API
@@ -21,30 +22,46 @@ def user_search(name):
     """This function returns the data from the user search API in a form of a JSON/Python dictionary
     """
     link = url.base_url + url.user_search_base + str(name)
-    result = requests.get(link, verify = False).json()
-    if not len(result):
-        raise KeyError("No user with such a name exists!")
+
+    try:
+        result = requests.get(link, verify = False).json()
+    except json.JSONDecodeError:
+        raise intersection.errors.errors.userNotFoundError
+        
     return result
 
 def user_info(id):
     """This function returns the data from the user info API in a form of a JSON/Python dictionary
     """
     link = url.base_url + url.user_info_base + str(id)
-    result = requests.get(link, verify = False).json()
-    if not len(result):
-        raise KeyError("No user with such an id exists!")
+
+    try:
+        result = requests.get(link, verify = False).json()
+    except json.JSONDecodeError:
+        raise intersection.errors.errors.userNotFoundError
+
     return result
 
 def map_top(mode, time, trendsystem):
     """This function returns the data from the top maps API in a form of a JSON/Python dictionary
     """
     link = url.base_url + url.map_base + f"top/{str(mode)}/{str(time)}?maxversion=999&trendsystem={trendsystem}"
-    result = requests.get(link, verify = False).json()
+
+    try:
+        result = requests.get(link, verify = False).json()
+    except json.JSONDecodeError:
+        raise intersection.errors.errors.mapNotFoundError
+    
     return result
 
 def map_user(id, resultsPerPage, page):
     """This function returns the data from the user maps API in a form of a JSON/Python dictionary
     """
     link = url.base_url + url.map_base + f"user/{str(id)}?result={resultsPerPage}&page={page}"
-    result = requests.get(link, verify = False).json()
+
+    try:
+        result = requests.get(link, verify = False).json()
+    except json.JSONDecodeError:
+        raise intersection.errors.errors.mapNotFoundError
+
     return result

@@ -1,5 +1,6 @@
 import intersection.url
 from intersection import user
+import intersection.errors
 
 class Map:
     """A class representing an IC map
@@ -53,13 +54,29 @@ class Map:
         returns a boolean value
         """
 
-        #return self in get_top_maps(mode, time, trendsystem)
+        api = get_top_maps(mode, time, trendsystem)
 
-        for item in get_top_maps(mode, time, trendsystem):
+        for item in api:
             if vars(self) == vars(item):
                 return True
 
         return False
+
+    def trending_position(self, mode, time, trendsystem):
+        """A function used to get the position of a given `Map` object in trending. the mapNotInTrendingError error will be raised if it's not in trending.
+
+        returns an integer
+        """
+        if self.is_in_trending(mode, time, trendsystem):
+            api = get_top_maps(mode, time, trendsystem)
+            position = 0
+
+            for item in api:
+                if vars(self) == vars(item):
+                    return position
+                position = position + 1
+        else:
+            raise intersection.errors.errors.mapNotInTrendingError
 
 def get_maps(user_id, resultsPerPage, page):
     """A function allowing you to create a list of ``Map`` objects.

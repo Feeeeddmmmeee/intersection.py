@@ -1,5 +1,7 @@
 # My files
 test.py
+
+# PYPI files
 *.txt
 *.in
 setup.py
