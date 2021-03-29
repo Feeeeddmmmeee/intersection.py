@@ -12,11 +12,13 @@ class User:
 
     Example code
     -----------
+    ```py
     import user
 
     example_user_object = User(1, 1, 1, 1, "name", 1)
 
     print(example_user_object.name)
+    ```
 
     Output
     -----------
@@ -40,6 +42,7 @@ class User:
 
         Example code
         -----------
+        ```py
         import user
 
         example_user_object = user.get_user(2452411)
@@ -47,6 +50,7 @@ class User:
         example_map_list = example_user_object.get_user_maps(1, 0)
 
         print(example_map_list[0].authorName)
+        ```
 
         Output
         -----------
@@ -94,11 +98,13 @@ def get_user(id):
 
     Example code
     -----------
+    ```py
     import user
 
     example_user_object = user.get_user(2452411)
 
     print(example_user_object.name)
+    ```
 
     Output
     -----------
@@ -125,11 +131,13 @@ def search_for_users(name):
 
     Example code
     -----------
+    ```py
     import user
 
     example_user_object_list = user.search_for_users("Feeeeddmmmeee")
 
     print(example_user_object_list[0].name)
+    ```
 
     Output
     -----------

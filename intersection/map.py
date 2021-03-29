@@ -16,11 +16,13 @@ class Map:
 
     Example code
     -----------
+    ```py
     import map
 
     example_map_object = Map("name", "desc", 0, "2452411_1605695684744", "trzmap", 2452411, 0, 0, 1, 0, 0, 0, 1, True, 1, 0, 0, False, 1, "Feeeeddmmmeee")
 
     print(example_map_object.name)
+    ```
 
     Output
     -----------
@@ -85,11 +87,13 @@ def get_maps(user_id, resultsPerPage, page):
 
     Example code
     -----------
+    ```py
     import map
 
     example_map_object_list = map.get_maps(2452411, 1, 0)
 
     print(example_map_object_list[0].authorName)
+    ```
 
     Output
     -----------
@@ -144,11 +148,13 @@ def get_top_maps(mode, time, trendsystem):
 
     Example code
     -----------
+    ```py
     import map
 
     example_map_object_list = map.get_top_maps(2, "day", 1)
 
     print(example_map_object_list[0].authorName)
+    ```
 
     Output
     -----------
