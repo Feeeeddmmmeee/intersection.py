@@ -23,6 +23,8 @@ $ git clone https://github/Feeeeddmmmeee/intersection.py
 
 The requests library is also required.
 
+For a more detailed download tutorial and the documentation check the [wiki page](https://github.com/Feeeeddmmmeee/intersection.py/wiki) on github.
+
 # Code Examples
 
 ## User class
