@@ -55,6 +55,7 @@ print(example_maps[0].authorName)
 ```py
 # Importing the library
 import intersection
+from intersection.ext import errors
 
 # Creating a Map object
 example_map = intersection.map.get_maps(2452411, 50, 0)
@@ -63,7 +64,7 @@ example_map = intersection.map.get_maps(2452411, 50, 0)
 try:
     position = example_map.trending_position(2, "day", 1)
     print(f"This map's trending position is: {position}")
-except intersection.errors.errors.mapNotInTrendingError:
+except errors.mapNotInTrendingError:
     print("This map is not in trending")
 ```
 
