@@ -1,7 +1,7 @@
 # A class storing all the urls that are used
 import pip._vendor.requests as requests
 import json
-import intersection.errors
+import intersection.ext
 
 class URLs:
     """This class contains all the urls that are used to make requests to the API
@@ -26,7 +26,7 @@ def user_search(name):
     try:
         result = requests.get(link, verify = False).json()
     except json.JSONDecodeError:
-        raise intersection.errors.errors.userNotFoundError
+        raise intersection.ext.errors.userNotFoundError
         
     return result
 
@@ -38,7 +38,7 @@ def user_info(id):
     try:
         result = requests.get(link, verify = False).json()
     except json.JSONDecodeError:
-        raise intersection.errors.errors.userNotFoundError
+        raise intersection.ext.errors.userNotFoundError
 
     return result
 
@@ -50,7 +50,7 @@ def map_top(mode, time, trendsystem):
     try:
         result = requests.get(link, verify = False).json()
     except json.JSONDecodeError:
-        raise intersection.errors.errors.mapNotFoundError
+        raise intersection.ext.errors.mapNotFoundError
     
     return result
 
@@ -62,6 +62,6 @@ def map_user(id, resultsPerPage, page):
     try:
         result = requests.get(link, verify = False).json()
     except json.JSONDecodeError:
-        raise intersection.errors.errors.mapNotFoundError
+        raise intersection.ext.errors.mapNotFoundError
 
     return result

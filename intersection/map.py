@@ -1,6 +1,5 @@
 import intersection.url
 from intersection import user
-import intersection.errors
 
 class Map:
     """A class representing an IC map
@@ -49,6 +48,18 @@ class Map:
         self.deleted = deleted
         self.objectId = objectId
         self.authorName = authorName
+
+    def get_author(self):
+        """A function creating a `User` object from the `author`
+        """
+        return intersection.user.get_user(self.author)
+
+    def get_highscore_user(self):
+        """A function returning a User` object from the `highScoreUser`
+        
+        May raise the `userNotFoundError` error if there's no highScoreUser or if it's not in the traffic controller category.
+        """
+        return intersection.user.get_user(self.highScoreUser)
 
     def is_in_trending(self, mode, time, trendsystem):
         """A function used to check if the given ``Map`` object is currently in the trending category

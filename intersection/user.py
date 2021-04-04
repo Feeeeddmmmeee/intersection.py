@@ -1,5 +1,4 @@
 import intersection.url
-import intersection.errors
 from intersection import map
 
 class User:
