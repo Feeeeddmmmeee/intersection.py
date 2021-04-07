@@ -80,7 +80,7 @@ class Map:
 
         returns an integer
         """
-        if self.is_in_trending(self.gameModeGroup, time, trendsystem):
+        if self.is_in_trending(time, trendsystem):
             api = get_top_maps(self.gameModeGroup, time, trendsystem)
             position = 0
 
