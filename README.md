@@ -62,7 +62,7 @@ example_map = intersection.map.get_maps(2452411, 50, 0)
 
 # Trying to get the trending position but if there's an error doing something else
 try:
-    position = example_map.trending_position(2, "day", 1)
+    position = example_map.trending_position("day", 1)
     print(f"This map's trending position is: {position}")
 except errors.mapNotInTrendingError:
     print("This map is not in trending")
@@ -70,5 +70,6 @@ except errors.mapNotInTrendingError:
 
 ## External links
 
-- [PYPI (pip installation)](https://pypi.org/project/intersection.py/)
+- [PYPI Page (pip installation)](https://pypi.org/project/intersection.py/)
 - [JavaScript version](https://github.com/RanggaGultom/ic-api) made by [RanggaGultom](https://github.com/RanggaGultom)
+- [Github Repository](https://github.com/Feeeeddmmmeee/intersection.py)

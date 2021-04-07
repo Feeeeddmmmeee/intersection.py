@@ -61,13 +61,13 @@ class Map:
         """
         return intersection.user.get_user(self.highScoreUser)
 
-    def is_in_trending(self, mode, time, trendsystem):
+    def is_in_trending(self, time, trendsystem):
         """A function used to check if the given ``Map`` object is currently in the trending category
 
         returns a boolean value
         """
 
-        api = get_top_maps(mode, time, trendsystem)
+        api = get_top_maps(self.gameModeGroup, time, trendsystem)
 
         for item in api:
             if vars(self) == vars(item):
@@ -75,13 +75,13 @@ class Map:
 
         return False
 
-    def trending_position(self, mode, time, trendsystem):
+    def get_trending_position(self, time, trendsystem):
         """A function used to get the position of a given `Map` object in trending. the mapNotInTrendingError error will be raised if it's not in trending.
 
         returns an integer
         """
-        if self.is_in_trending(mode, time, trendsystem):
-            api = get_top_maps(mode, time, trendsystem)
+        if self.is_in_trending(self.gameModeGroup, time, trendsystem):
+            api = get_top_maps(self.gameModeGroup, time, trendsystem)
             position = 0
 
             for item in api:
