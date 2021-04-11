@@ -21,3 +21,9 @@ class userNotFoundError(Error):
 
     def __str__(self):
         return "The requested user does not exist!"
+
+class noArgumentsError(Error):
+    """An error raised by `compare_map_likes()` and `compare_user_followers()` when no arguments are given"""
+
+    def __str__(self):
+        return "You must pass in some User/Map objects!"

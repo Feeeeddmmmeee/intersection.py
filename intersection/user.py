@@ -12,9 +12,9 @@ class User:
     Example code
     -----------
     ```py
-    import user
+    import intersection
 
-    example_user_object = User(1, 1, 1, 1, "name", 1)
+    example_user_object = intersection.user.User(1, 1, 1, 1, "name", 1)
 
     print(example_user_object.name)
     ```
@@ -42,9 +42,9 @@ class User:
         Example code
         -----------
         ```py
-        import user
+        import intersection
 
-        example_user_object = user.get_user(2452411)
+        example_user_object = intersection.user.get_user(2452411)
 
         example_map_list = example_user_object.get_user_maps(1, 0)
 
@@ -98,9 +98,9 @@ def get_user(id):
     Example code
     -----------
     ```py
-    import user
+    import intersection
 
-    example_user_object = user.get_user(2452411)
+    example_user_object = intersection.user.get_user(2452411)
 
     print(example_user_object.name)
     ```
@@ -131,9 +131,9 @@ def search_for_users(name):
     Example code
     -----------
     ```py
-    import user
+    import intersection
 
-    example_user_object_list = user.search_for_users("Feeeeddmmmeee")
+    example_user_object_list = intersection.user.search_for_users("Feeeeddmmmeee")
 
     print(example_user_object_list[0].name)
     ```

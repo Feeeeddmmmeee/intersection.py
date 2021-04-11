@@ -1,7 +1,7 @@
 # A class storing all the urls that are used
 import pip._vendor.requests as requests
 import json
-import intersection.ext
+import intersection.ext.errors
 
 class URLs:
     """This class contains all the urls that are used to make requests to the API
