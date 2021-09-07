@@ -1,1 +1,1 @@
-from intersection import user, map
+from intersection import user, map, comment, highscore

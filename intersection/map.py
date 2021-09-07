@@ -1,32 +1,10 @@
-import intersection.url
-from intersection import user
+from intersection.ext import url
+from intersection import user, comment, highscore
 
 class Map:
-    """A class representing an IC map
-
-    You can use the provided functions to get the ``Map`` object from either their author (It's a function inside the ``User`` class) or their author's ``ID``
-    The required __init__ arguments are: ``name, desc, gameModeGroup, fileName, fileExt, author, created, updated, gameVersion, votesUp, votesDown, highScore, highScoreUser, fullyUploaded, mapVersion, targetScore, favorites, deleted, objectId, authorName``
-
-    ``created``, ``updated`` are represented in milliseconds
-
-    ``gameModeGroup`` is an integer
-
-    ``fullyUploaded``, ``deleted`` are boolean values, usually ``fullUploaded = True`` and ``deleted = False``
-
-    Example code
-    -----------
-    ```py
-    import intersection
-
-    example_map_object = intersection.map.Map("name", "desc", 0, "2452411_1605695684744", "trzmap", 2452411, 0, 0, 1, 0, 0, 0, 1, True, 1, 0, 0, False, 1, "Feeeeddmmmeee")
-
-    print(example_map_object.name)
-    ```
-
-    Output
-    -----------
-    name
+    """A class representing an IC map.
     """
+
     def __init__(self, name, desc, gameModeGroup, fileName, fileExt, author, created, updated, gameVersion, votesUp, votesDown, highScore, highScoreUser, fullyUploaded, mapVersion, targetScore, favorites, deleted, objectId, authorName):
         self.name = name
         self.desc = desc
@@ -50,157 +28,366 @@ class Map:
         self.authorName = authorName
 
     def get_author(self):
-        """A function creating a `User` object from the `author`
+        """A method used to used to create a `User` object of the map author.
+
+        Usage::
+
+        >>> import intersection
+        >>> map = intersection.map.get_map_details(mapId=413915)
+        >>> author = map.get_author()
+        >>> print(author.name)
         """
-        return intersection.user.get_user(self.author)
+        return user.get_details_for_user(userId=self.objectId)
 
     def get_highscore_user(self):
-        """A function returning a User` object from the `highScoreUser`
-        
-        May raise the `userNotFoundError` error if there's no highScoreUser or if it's not in the traffic controller category.
+        """A method used to used to create a `User` object of the person who achieved the highest score on the map.
+
+        Usage::
+
+        >>> import intersection
+        >>> map = intersection.map.get_map_details(mapId=413915)
+        >>> highscore_user = map.get_highscore_user()
+        >>> print(highscore_user.name)
         """
-        return intersection.user.get_user(self.highScoreUser)
+        return user.get_details_for_user(userId=self.highScoreUser)
+    
+    def is_in_trending(self, **kwargs):
+        """A method used to used to get the trending position of a map.
 
-    def is_in_trending(self, time, trendsystem):
-        """A function used to check if the given ``Map`` object is currently in the trending category
+        `time` - alltime / month / week / day
 
-        returns a boolean value
+        `maxversion` - The requester's game version, so if you have version 130 of the app you will not get maps that were made using 140 and might not be possible to play. Setting something very high such as 999 will just search for everything. If not added to the request then only maps made before beta will be searched for.
+
+        `result` - Number of results to return on a page.
+
+        `page` - Index of page of results to return, starting at page 0.
+
+        `trendsystem` - 0 or 1, should always be set to 1 as that is the current version used ingame.
+
+        Usage::
+
+        >>> import intersection
+        >>> map = intersection.map.get_map_details(mapId=413915)
+        >>> is_in_trending = map.is_in_trending(time="alltime", result=5)
+        >>> print(is_in_trending)
         """
+        data = find_top_maps(**kwargs)
 
-        api = get_top_maps(self.gameModeGroup, time, trendsystem)
-
-        for item in api:
-            if vars(self) == vars(item):
+        for mapdata in data:
+            if vars(self) == vars(mapdata):
                 return True
 
         return False
 
-    def get_trending_position(self, time, trendsystem):
-        """A function used to get the position of a given `Map` object in trending. the mapNotInTrendingError error will be raised if it's not in trending.
+    def get_trending_position(self, **kwargs):
+        """A method used to used to get the trending position of a map.
 
-        returns an integer
+        `time` - alltime / month / week / day
+
+        `maxversion` - The requester's game version, so if you have version 130 of the app you will not get maps that were made using 140 and might not be possible to play. Setting something very high such as 999 will just search for everything. If not added to the request then only maps made before beta will be searched for.
+
+        `result` - Number of results to return on a page.
+
+        `page` - Index of page of results to return, starting at page 0.
+
+        `trendsystem` - 0 or 1, should always be set to 1 as that is the current version used ingame.
+
+        Usage::
+
+        >>> import intersection
+        >>> map = intersection.map.get_map_details(mapId=413915)
+        >>> position = map.get_trending_position(time="alltime", result=5)
+        >>> print(position)
         """
-        if self.is_in_trending(time, trendsystem):
-            api = get_top_maps(self.gameModeGroup, time, trendsystem)
-            position = 0
+        data = find_top_maps(gameMode=self.gameModeGroup, **kwargs)
+        position = 0
 
-            for item in api:
-                if vars(self) == vars(item):
-                    return position
-                position = position + 1
-        else:
-            raise intersection.errors.errors.mapNotInTrendingError
+        for mapdata in data:
+            if vars(self) == vars(mapdata):
+                return position
+            position = position + 1
 
-def get_maps(user_id, resultsPerPage, page):
-    """A function allowing you to create a list of ``Map`` objects.
+    def get_comments(self, **kwargs):
+        """A method used to used to create a list of `Comment` objects under a certain map.
 
-    For creating a ``Map`` object from the ``User`` object look for: ``user.get_user_maps()``
+        `before` - ID of comment to fetch results after, in order to not get duplicates.
 
-    Example code
-    -----------
-    ```py
-    import intersection
+        `limit` - Number of comments to return.
 
-    example_map_object_list = intersection.map.get_maps(2452411, 1, 0)
+        Usage::
 
-    print(example_map_object_list[0].authorName)
-    ```
+        >>> import intersection
+        >>> map = intersection.map.get_map_details(mapId=413915)
+        >>> comments = map.get_comments(limit=5)
+        >>> for comment in comments: print(comment.comment)
+        """
+        return comment.list_comments_on_map(mapId=self.objectId, **kwargs)
+    
+    def get_thumbnail_url(self):
+        """A method returning the url of the thumbnail image of a map.
 
-    Output
-    -----------
-    Feeeeddmmmeee
+        Usage::
 
-    Note
-    -----------
-    Maps are sorted by the upload date. 0 is the newest one.
+        >>> import intersection
+        >>> map = intersection.map.get_map_details(mapId=413915)
+        >>> thumbnail_url = map.get_thumbnail_url()
+        >>> print(thumbnail_url)
+        """
+        return get_map_thumbnail_url(mapId=self.objectId)
+
+    def get_highscores(self, **kwargs):
+        """A method used to used to create a list of `Highscore` objects on a certain map.
+
+        `count` - Number of high scores to get.
+
+        Usage::
+
+        >>> import intersection
+        >>> map = intersection.map.get_map_details(mapId=413915)
+        >>> highscores = map.get_highscores(count=5)
+        >>> for highscore in highscores: print(comment.comment)
+        """
+        return highscore.list_high_scores_on_map(mapId=self.objectId, **kwargs)
+
+def search_for_maps(**kwargs):
+    """A function used to used to create a list of `Map` objects matching a given name.
+
+    `gameMode` - 1 = Simulation, 2 = Traffic Controller, 3 = Miscellaneous
+
+    `maxversion` - The requester's game version, so if you have version 130 of the app you will not get maps that were made using 140 and might not be possible to play. Setting something very high such as 999 will just search for everything. If not added to the request then only maps made before beta will be searched for.
+
+    `result` - Number of results to return on a page.
+
+    `page` - Index of page of results to return, starting at page 0.
+
+    `query` - Text to search for, will look at author name, map name and map description.
+
+    Usage::
+
+    >>> import intersection
+    >>> maps = intersection.map.search_for_maps(gameMode=1, result=5, query="Feeeeddmmmeee")
+    >>> for map in maps: print(map.name)
     """
-
+    data = url.search_for_maps(**kwargs)
     maps = []
-
-    api = intersection.url.url.map_user(user_id, resultsPerPage, page)
-
-    for i in range(len(api)):
-
-        temp = Map(
-            api[i]["name"],
-            api[i]["desc"],
-            int(api[i]["gameModeGroup"]),
-            api[i]["fileName"],
-            api[i]["fileExt"],
-            int(api[i]["author"]),
-            int(api[i]["created"]),
-            int(api[i]["updated"]),
-            int(api[i]["gameVersion"]),
-            int(api[i]["votesUp"]),
-            int(api[i]["votesDown"]),
-            int(api[i]["highScore"]),
-            int(api[i]["highScoreUser"]),
-            bool(api[i]["fullyUploaded"]),
-            int(api[i]["mapVersion"]),
-            int(api[i]["targetScore"]),
-            int(api[i]["favorites"]),
-            bool(api[i]["deleted"]),
-            int(api[i]["objectId"]),
-            api[i]["authorName"]
-        )
-
-        maps.append(temp)
+    for mapdata in data:
+        maps.append(Map(
+            mapdata['name'], 
+            mapdata['desc'], 
+            mapdata['gameModeGroup'], 
+            mapdata['fileName'], 
+            mapdata['fileExt'], 
+            mapdata['author'], 
+            mapdata['created'], 
+            mapdata['updated'], 
+            mapdata['gameVersion'], 
+            mapdata['votesUp'], 
+            mapdata['votesDown'],
+            mapdata['highScore'],
+            mapdata['highScoreUser'],
+            mapdata['fullyUploaded'],
+            mapdata['mapVersion'],
+            mapdata['targetScore'],
+            mapdata['favorites'],
+            mapdata['deleted'],
+            mapdata['objectId'],
+            mapdata['authorName'],
+        ))
 
     return maps
 
-def get_top_maps(mode, time, trendsystem):
-    """A function allowing you to create a list of ``Map`` objects that are currently in one of the "top" categories in the game
+def find_top_maps(**kwargs):
+    """A function used to used to create a list of `Map` objects in one of the top categories.
 
-    mode is an integer
+    `gameMode` - 1 = Simulation, 2 = Traffic Controller, 3 = Miscellaneous
 
-    time is a string, can be one of the following: "day", "week", "month"
+    `time` - alltime / month / week / day
 
-    trendsystem is an integer
+    `maxversion` - The requester's game version, so if you have version 130 of the app you will not get maps that were made using 140 and might not be possible to play. Setting something very high such as 999 will just search for everything. If not added to the request then only maps made before beta will be searched for.
 
-    Example code
-    -----------
-    ```py
-    import intersection
+    `result` - Number of results to return on a page.
 
-    example_map_object_list = intersection.map.get_top_maps(2, "day", 1)
+    `page` - Index of page of results to return, starting at page 0.
 
-    print(example_map_object_list[0].authorName)
-    ```
+    `trendsystem` - 0 or 1, should always be set to 1 as that is the current version used ingame.
 
-    Output
-    -----------
-    Feeeeddmmmeee
+    `offset` - How many weeks / months / days from today to give results for, negative to go back in time, positive will give future and thus usually an empty list.
+
+    Usage::
+
+    >>> import intersection
+    >>> maps = intersection.map.find_top_maps(gameMode=1, time="alltime", result=5)
+    >>> for map in maps: print(map.name)
     """
 
+    data = url.find_top_maps(**kwargs)
     maps = []
-
-    api = intersection.url.url.map_top(mode, time, trendsystem)
-
-    for i in range(len(api)):
-
-        temp = Map(
-            api[i]["name"],
-            api[i]["desc"],
-            int(api[i]["gameModeGroup"]),
-            api[i]["fileName"],
-            api[i]["fileExt"],
-            int(api[i]["author"]),
-            int(api[i]["created"]),
-            int(api[i]["updated"]),
-            int(api[i]["gameVersion"]),
-            int(api[i]["votesUp"]),
-            int(api[i]["votesDown"]),
-            int(api[i]["highScore"]),
-            int(api[i]["highScoreUser"]),
-            bool(api[i]["fullyUploaded"]),
-            int(api[i]["mapVersion"]),
-            int(api[i]["targetScore"]),
-            int(api[i]["favorites"]),
-            bool(api[i]["deleted"]),
-            int(api[i]["objectId"]),
-            api[i]["authorName"]
-        )
-
-        maps.append(temp)
+    for mapdata in data:
+        maps.append(Map(
+            mapdata['name'], 
+            mapdata['desc'], 
+            mapdata['gameModeGroup'], 
+            mapdata['fileName'], 
+            mapdata['fileExt'], 
+            mapdata['author'], 
+            mapdata['created'], 
+            mapdata['updated'], 
+            mapdata['gameVersion'], 
+            mapdata['votesUp'], 
+            mapdata['votesDown'],
+            mapdata['highScore'],
+            mapdata['highScoreUser'],
+            mapdata['fullyUploaded'],
+            mapdata['mapVersion'],
+            mapdata['targetScore'],
+            mapdata['favorites'],
+            mapdata['deleted'],
+            mapdata['objectId'],
+            mapdata['authorName'],
+        ))
 
     return maps
+
+def list_new_maps(**kwargs):
+    """A function used to used to create a list of `Map` objects in the new category.
+
+    `gameMode` - 1 = Simulation, 2 = Traffic Controller, 3 = Miscellaneous
+
+    `maxversion` - The requester's game version, so if you have version 130 of the app you will not get maps that were made using 140 and might not be possible to play. Setting something very high such as 999 will just search for everything. If not added to the request then only maps made before beta will be searched for.
+
+    `result` - Number of results to return on a page.
+
+    `page` - Index of page of results to return, starting at page 0.
+
+    Usage::
+
+    >>> import intersection
+    >>> maps = intersection.map.list_new_maps(gameMode=1, result=5)
+    >>> for map in maps: print(map.name)
+    """
+
+    data = url.list_new_maps(**kwargs)
+    maps = []
+    for mapdata in data:
+        maps.append(Map(
+            mapdata['name'], 
+            mapdata['desc'], 
+            mapdata['gameModeGroup'], 
+            mapdata['fileName'], 
+            mapdata['fileExt'], 
+            mapdata['author'], 
+            mapdata['created'], 
+            mapdata['updated'], 
+            mapdata['gameVersion'], 
+            mapdata['votesUp'], 
+            mapdata['votesDown'],
+            mapdata['highScore'],
+            mapdata['highScoreUser'],
+            mapdata['fullyUploaded'],
+            mapdata['mapVersion'],
+            mapdata['targetScore'],
+            mapdata['favorites'],
+            mapdata['deleted'],
+            mapdata['objectId'],
+            mapdata['authorName'],
+        ))
+
+    return maps
+
+def list_maps_by_user(**kwargs):
+    """A function used to used to create a list of `Map` objects uploaded by a certain user.
+
+    `userId` - ID of user.
+
+    `maxversion` - The requester's game version, so if you have version 130 of the app you will not get maps that were made using 140 and might not be possible to play. Setting something very high such as 999 will just search for everything. If not added to the request then only maps made before beta will be searched for.
+
+    `result` - Number of results to return on a page.
+
+    `page` - Index of page of results to return, starting at page 0.
+
+    Usage::
+
+    >>> import intersection
+    >>> maps = intersection.map.list_maps_by_user(userId=2452411)
+    >>> for map in maps: print(map.name)
+    """
+
+    data = url.list_maps_by_user(**kwargs)
+    maps = []
+    for mapdata in data:
+        maps.append(Map(
+            mapdata['name'], 
+            mapdata['desc'], 
+            mapdata['gameModeGroup'], 
+            mapdata['fileName'], 
+            mapdata['fileExt'], 
+            mapdata['author'], 
+            mapdata['created'], 
+            mapdata['updated'], 
+            mapdata['gameVersion'], 
+            mapdata['votesUp'], 
+            mapdata['votesDown'],
+            mapdata['highScore'],
+            mapdata['highScoreUser'],
+            mapdata['fullyUploaded'],
+            mapdata['mapVersion'],
+            mapdata['targetScore'],
+            mapdata['favorites'],
+            mapdata['deleted'],
+            mapdata['objectId'],
+            mapdata['authorName'],
+        ))
+
+    return maps
+
+def get_map_details(**kwargs):
+    """A function used to used to create a `Map` object from it's ID.
+
+    `mapId` - ID of map to get info about.
+
+    Usage::
+
+    >>> import intersection
+    >>> map = intersection.map.get_map_details(mapId=413915)
+    >>> print(map.name)
+    """
+    data = url.get_map_details(**kwargs)
+    map = Map(
+        data['name'], 
+        data['desc'], 
+        data['gameModeGroup'], 
+        data['fileName'], 
+        data['fileExt'], 
+        data['author'], 
+        data['created'], 
+        data['updated'], 
+        data['gameVersion'], 
+        data['votesUp'], 
+        data['votesDown'],
+        data['highScore'],
+        data['highScoreUser'],
+        data['fullyUploaded'],
+        data['mapVersion'],
+        data['targetScore'],
+        data['favorites'],
+        data['deleted'],
+        data['objectId'],
+        data['authorName'],
+    )
+
+    return map
+
+def get_map_thumbnail_url(**kwargs):
+    """A function used to return a link to a map's thumbnail.
+
+    `mapId` - ID of the map to get an image for.
+
+    Usage::
+
+    >>> import intersection
+    >>> link = intersection.map.get_map_thumbnail_url(mapId=413915)
+    >>> print(link)
+    """
+
+    data = url.get_map_thumbnail_url(**kwargs)
+    return data

@@ -1,71 +1,67 @@
 # intersection.py
 
-A not so easy to use API wrapper for IC's API with a few features.
+An easy to use API wrapper with some basic functionality you would expect an API wrapper to have.
 
 ## Key Features
 
-- User and Map classes with all the features that IC maps or users have
-- Several functions related to these classes
-- It's not really optimized but should work just fine
+- User, Map, Comment and Highscore classes with their corresponding features.
+- Functions used to get said objects from different sources.
+- It's not really optimized but should work just fine.
 
 ## Installing
 
-**Python is required**. You can either download the version from github or use pip
+You can either use pip or copy the github repository.
 
-pip (replace "version" with the version you want to download):
+pip (replace "version" with the version you want to download or alternatively just don't specify it.):
 ```sh
 pip install intersection.py==version
 ```
-github (the newest possible version but it's not what you want to downlaod usually):
+
+### Required packages
+The only other package this API wrapper requires is `requests`. In order to download it run this command:
 ```sh
-$ git clone https://github/Feeeeddmmmeee/intersection.py
+pip install requests
 ```
 
-The requests library is also required.
-
-For a more detailed download tutorial and the documentation check the [wiki page](https://github.com/Feeeeddmmmeee/intersection.py/wiki) on github.
-
-# Code Examples
-
-## User class
+## Quick example
 ```py
-# Importing the library
 import intersection
 
-# Creating a variable "example_user" that will store the User object created with the get_user() function
-example_user = intersection.user.get_user(2452411)
+my_user = intersection.user.get_details_for_user(userId=2452411)
+print(my_user.name)
 
-# Printing the user's name
-print(example_user.name)
+my_maps = my_user.get_user_maps()
+
+for map in my_maps:
+    print(map.name)
+
+    comment = map.get_comments(limit=1)
+    if len(comment):
+        print("Latest comment: " + comment[0].comment)
+
+    if map.gameModeGroup == 2:
+        highscore = map.get_highscores(count=1)
+        print("Highscore: " + highscore[0].score)
 ```
-
-## Map class
+### JSON example
 ```py
-# Importing the library
-import intersection
+from intersection.ext import url
 
-# Creating a variable called "example_maps" with the get_maps() function. 
-example_maps = intersection.map.get_maps(2452411, 1, 0) 
+my_user = url.get_details_for_user(userId=2452411)
+print(my_user["name"])
 
-# Printing the author's name
-print(example_maps[0].authorName)
-```
+my_maps = url.list_maps_by_user(userId=my_user["objectId"])
 
-## Error exceptions
-```py
-# Importing the library
-import intersection
-from intersection.ext import errors
+for map in my_maps:
+    print(map["name"])
 
-# Creating a Map object
-example_map = intersection.map.get_maps(2452411, 50, 0)
+    comment = url.list_comments_on_map(mapId=map["objectId"], limit=1)
+    if len(comment):
+        print("Latest comment: " + comment[0]["comment"])
 
-# Trying to get the trending position but if there's an error doing something else
-try:
-    position = example_map.trending_position("day", 1)
-    print(f"This map's trending position is: {position}")
-except errors.mapNotInTrendingError:
-    print("This map is not in trending")
+    if map["gameModeGroup"] == 2:
+        highscore = url.list_high_scores_on_map(mapId=map["objectId"], count=1)
+        print("Highscore: " + highscore[0]["score"])
 ```
 
 ## External links
