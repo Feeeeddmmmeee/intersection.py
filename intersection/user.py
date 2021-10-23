@@ -44,14 +44,7 @@ def search_for_users(**kwargs):
     data = url.search_for_users(**kwargs)
     users = []
     for userdata in data:
-        users.append(User(
-            userdata['objectId'],
-            userdata['gameVersion'],
-            userdata['lastLogin'],
-            userdata['maps'],
-            userdata['name'],
-            userdata['followers'],
-        ))
+        users.append(get_details_for_user(userId=userdata["objectId"]))
 
     return users
 
