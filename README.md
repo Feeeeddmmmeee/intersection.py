@@ -2,6 +2,9 @@
 
 An easy to use API wrapper with some basic functionality you would expect an API wrapper to have.
 
+> [!CAUTION]
+> This project has been made obsolete by [tl3api](https://github.com/Feeeeddmmmeee/tl3api), which provides broader API coverage and asynchronous requests, and thus will no longer be maintained.
+
 ## Key Features
 
 - User, Map, Comment and Highscore classes with their corresponding features.
